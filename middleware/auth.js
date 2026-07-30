@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-// Verifies the JWT in the Authorization header and attaches the
-// decoded user (id, username, role) to req.user.
+
 function verifyToken(req, res, next) {
   const header = req.headers.authorization;
   if (!header || !header.startsWith('Bearer ')) {
@@ -19,7 +18,6 @@ function verifyToken(req, res, next) {
   }
 }
 
-// Only allows the given roles through, e.g. requireRole('staff', 'manager')
 function requireRole(...allowedRoles) {
   return (req, res, next) => {
     if (!req.user || !allowedRoles.includes(req.user.role)) {
