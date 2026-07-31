@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paws & Home — Pet Adoption</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand"><span class="paw">🐾</span> Paws &amp; Home</div>
+  <nav>
+    <a href="#browse">Browse Pets</a>
+    
+    <a href="#" id="myAdoptionsNavLink" style="display:none;" onclick="scrollToMyAdoptions(); return false;">My Requests</a>
+    <a href="#" onclick="showLoginModal(); return false;">🔐 Login</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <p class="eyebrow">Adoption Center</p>
+    <h1>Every pet deserves<br>a home to run to.</h1>
+    <p>Browse pets currently at our center, check their vaccination status, and start an adoption request in minutes. Our staff handles the rest.</p>
+    <button class="btn btn-primary" onclick="scrollToBrowse()">Browse available pets</button>
+    <div class="hero-stats">
+      <div><div class="num" id="statAvailable">0</div><div class="label">Available now</div></div>
+      <div><div class="num" id="statAdopted">0</div><div class="label">Found homes</div></div>
+      <div><div class="num" id="statTotal">0</div><div class="label">In our care</div></div>
+    </div>
+  </div>
+  <div class="hero-art">
+    <span class="big-paw">🐾</span>
+    <div class="tag">"We don't just place pets.<br>We match families."</div>
+  </div>
+</section>
+
+<section class="wrap" id="browse">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Meet Them</p>
+      <h2>Pets looking for a home</h2>
+    </div>
+  </div>
+
+  <div class="filters">
+    <input type="text" id="searchBox" placeholder="Search by name or breed...">
+    <select id="typeFilter"><option value="">All types</option></select>
+    <select id="breedFilter"><option value="">All breeds</option></select>
+    <select id="statusFilter">
+      <option value="">All statuses</option>
+      <option value="Available">Available</option>
+      <option value="Pending">Pending</option>
+      <option value="Adopted">Adopted</option>
+    </select>
+  </div>
+
+  <div class="grid" id="petGrid"></div>
+</section>
+<section class="wrap" id="myAdoptions" style="display:none;">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Your Activity</p>
+      <h2>My Adoption Requests</h2>
+    </div>
+  </div>
+  <div class="card" style="background:#fff;border:1px solid var(--sage-line);border-radius:14px;padding:8px 16px;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:10px;">Pet</th>
+          <th style="text-align:left;padding:10px;">Status</th>
+          <th style="text-align:left;padding:10px;">Assigned Staff</th>
+          <th style="text-align:left;padding:10px;">Delivery</th>
+          <th style="text-align:left;padding:10px;">Requested On</th>
+        </tr>
+      </thead>
+      <tbody id="myAdoptionsBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<footer>Pet Adoption Management System — Project Phase Demo</footer>
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <button class="close" onclick="closeModal()">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal login-modal">
+    <button class="close" onclick="closeLoginModal()">&times;</button>
+    <h2 style="margin-bottom:4px;">🔐 Login</h2>
+    <p style="color:#6B655D;margin-bottom:20px;font-size:14px;">Adopters, staff and admins all log in here.</p>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="loginUsername" placeholder="Enter username" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter password" required>
+      </div>
+      <div id="loginError" style="color:#B84C3E;font-size:13px;display:none;margin-bottom:10px;"></div>
+      <div class="modal-actions" style="margin-top:0;">
+        <button type="button" class="btn btn-ghost" onclick="closeLoginModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </form>
+
+    <div style="margin-top:14px;text-align:center;padding-top:14px;border-top:1px solid #E1DCCF;">
+      <p style="font-size:13px;color:#6B655D;margin:0 0 8px 0;">Haven't registered yet?</p>
+      <button type="button" class="btn btn-primary" onclick="closeLoginModal();showRegisterModal();" style="background:var(--forest);">
+        📝 Create Adopter Account
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal-->
+<div class="overlay" id="registerOverlay">
+  <div class="modal register-modal">
+    <button class="close" onclick="closeRegisterModal()">&times;</button>
+    <h2 style="margin-bottom:4px;">📝 Create Adopter Account</h2>
+    <p style="color:#6B655D;margin-bottom:20px;font-size:14px;">Fill in the details below to register</p>
+
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <div class="field"><label>Full Name *</label><input type="text" id="regFullName" required></div>
+      <div class="field"><label>Username *</label><input type="text" id="regUsername" required></div>
+      <div class="field"><label>Email *</label><input type="email" id="regEmail" required></div>
+      <div class="field"><label>Phone *</label><input type="tel" id="regPhone" required></div>
+      <div class="field"><label>Address</label><input type="text" id="regAddress"></div>
+      <div class="field"><label>Password *</label><input type="password" id="regPassword" minlength="6" required></div>
+      <div class="field"><label>Confirm Password *</label><input type="password" id="regConfirmPassword" required></div>
+
+      <div id="registerError" style="color:#B84C3E;font-size:13px;display:none;margin-bottom:10px;"></div>
+
+      <div class="modal-actions" style="margin-top:0;">
+        <button type="button" class="btn btn-ghost" onclick="closeRegisterModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" style="background:var(--forest);">Create Account</button>
+      </div>
+    </form>
+
+    <div style="margin-top:16px;text-align:center;padding-top:16px;border-top:1px solid #E1DCCF;">
+      <p style="font-size:13px;color:#6B655D;margin:0 0 8px 0;">Already have an account?</p>
+      <button type="button" class="btn btn-ghost" onclick="closeRegisterModal();showLoginModal();">🔐 Login Here</button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
